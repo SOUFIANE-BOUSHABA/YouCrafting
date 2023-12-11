@@ -1,4 +1,4 @@
-# Journal d'études - [Date d'aujourd'hui]
+# Journal d'études 
 
 Aujourd'hui, j'ai étudié plusieurs concepts fondamentaux de la programmation orientée objet (OOP) en PHP. Voici un résumé de ce que j'ai appris :
 
