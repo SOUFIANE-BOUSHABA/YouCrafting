@@ -15,10 +15,10 @@ class Articlee {
         $this->db = $db;
     }
 
-    public function addArticle($article) {
+    public function addArticle($titre,$contenu,$user_id) {
         $query = "INSERT INTO Article (titre, contenu, date_de_creation, user_id) VALUES (?, ?, NOW(), ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$article->titre, $article->contenu, $article->user_id]);
+        $stmt->execute([$titre,$contenu,$user_id]);
     }
 
     public function getArticles() {
