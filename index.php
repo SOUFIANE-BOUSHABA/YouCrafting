@@ -1,3 +1,9 @@
+<?php
+session_start();
+if(!isset($_SESSION['idUser'])){
+    header("location: ./login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,11 +20,15 @@
     include 'article.php';
 
     $articleManager = new Articlee();
+
+    if ( $_SESSION['role']==1) {
+       
+    
     ?>
 
     <div class="container mt-5">
-
-        <form action="add.php" method="post" class="mb-3">
+        
+        <form id="addArticleForm" class="mb-3">
             <div class="mb-3">
                 <label for="titre" class="form-label">Titre:</label>
                 <input type="text" name="titre" class="form-control" required>
@@ -27,7 +37,7 @@
                 <label for="contenu" class="form-label">Contenu:</label>
                 <textarea name="contenu" class="form-control" required></textarea>
             </div>
-            <button type="submit" id="submitBtn" class="btn btn-primary">Ajouter</button>
+            <button type="button" id="submitBtn" class="btn btn-primary">Ajouter</button>
         </form>
 
         <h2>Liste des articles</h2>
@@ -41,69 +51,115 @@
                 </tr>
             </thead>
             <tbody id="demo">
-            <?php
-
-
-
-                $articles = $articleManager->getArticles();
-                foreach ($articles as $article) {
-                ?>
-                <tr>
-                    <td><?php echo $article['Id']; ?></td>
-                    <td><?php echo $article['titre']; ?></td>
-                    <td><?php echo $article['contenu']; ?></td>
-                    <td>
-                     
-                           
-                    <button type="button" onclick="deleteArticle(<?php echo $article['Id']; ?>)" class="btn btn-danger">Supprimer</button>
-                     
-
-                        <button class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#updateModal<?php echo $article['Id']; ?>">
-                            Modifier
-                        </button>
-
-                        <div class="modal fade" id="updateModal<?php echo $article['Id']; ?>" tabindex="-1"
-                            aria-labelledby="updateModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="updateModalLabel">Modifier l'article</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-
-                                        <form action="update.php" class="formupdate" method="post">
-                                            <input type="hidden" name="article_id"
-                                                value="<?php echo $article['Id']; ?>">
-                                            <div class="mb-3">
-                                                <label for="nouveau_titre" class="form-label">Nouveau titre:</label>
-                                                <input type="text" name="nouveau_titre" class="form-control"
-                                                    value="<?php echo $article['titre']; ?>">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="nouveau_contenu" class="form-label">Nouveau contenu:</label>
-                                                <textarea name="nouveau_contenu"
-                                                    class="form-control"><?php echo $article['contenu']; ?></textarea>
-                                            </div>
-                                            <button type="submit"  class="btn btn-primary">Enregistrer les
-                                                modifications</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <?php } ?>
 
             </tbody>
         </table>
     </div>
-
+     <?php } else{ ?>
+       <h1> <?= $_SESSION['name']?> vous pas active for add article</h1>
+   <?php  } ?>
+     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'add.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                     affiche();
+                } else {
+                    console.error('Request failed with status:', xhr.status);
+                }
+            };
+
+            xhr.onerror = function() {
+                console.error('Request failed');
+            };
+
+            var formData = new FormData(document.getElementById('addArticleForm'));
+            var serializedData = new URLSearchParams(formData).toString();
+
+            xhr.send(serializedData);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        affiche();
+});
+function affiche(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'affichage.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("demo").innerHTML = this.responseText;
+        }
+    };
+
+    xhr.send('test=true');}
+
+
+
+    
+  
+    function deleteArticle(id){
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'delet.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                affiche();
+            }
+        };
+
+        xhr.send(`delet=` + encodeURIComponent(id));
+    }
+
+
+
+// document.querySelectorAll('.formupdate').forEach(function (form) {
+// form.addEventListener('submit', function (event) {
+//         event.preventDefault(); 
+//         // Prevent the default form submission
+
+//         var articleId = form.querySelector('[name="article_id"]').value;
+//         var newTitle = form.querySelector('[name="nouveau_titre"]').value;
+//         var newContent = form.querySelector('[name="nouveau_contenu"]').value;
+//         console.log(newTitle);
+//         update(articleId, newTitle, newContent);
+//     });
+// });
+   
+
+// function update(id, newTitle, newContent) {
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('POST', 'update.php', true);
+//     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+//     xhr.onreadystatechange = function () {
+//         if (this.readyState == 4 && this.status == 200) {
+//             affiche();
+//         }
+//     };
+
+//     var data = 'article_id=' + encodeURIComponent(id) +
+//                '&nouveau_titre=' + encodeURIComponent(newTitle) +
+//                '&nouveau_contenu=' + encodeURIComponent(newContent);
+
+//     xhr.send(data);
+// }
+
+       
+    
+    </script>
 
 
 </body>
