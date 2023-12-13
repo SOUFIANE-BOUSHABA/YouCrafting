@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $articleManager->addArticle($article);
 
     header('Content-Type: application/json');
-    echo json_encode(['id' => $article->id, 'titre' => $article->titre, 'contenu' => $article->contenu]);
+   
     exit;
 }
 ?>

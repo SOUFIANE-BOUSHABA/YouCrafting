@@ -6,6 +6,9 @@ class Articlee {
     public $date_de_creation;
     public $user_id;
 
+
+    
+
     private $db;
 
     public function __construct() {
