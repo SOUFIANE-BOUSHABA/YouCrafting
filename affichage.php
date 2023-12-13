@@ -1,9 +1,9 @@
 
 <?php
-
+include 'db.php';
 include 'article.php';
-
-$articleManager = new Articlee();
+$db = new DB();
+$articleManager = new Articlee($db->connect());
 
 if(isset($_POST['test'])){
                 $articles = $articleManager->getArticles();

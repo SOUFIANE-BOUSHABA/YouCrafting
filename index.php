@@ -19,7 +19,7 @@ if(!isset($_SESSION['idUser'])){
     <?php
     include 'article.php';
 
-    $articleManager = new Articlee();
+   
 
     if ( $_SESSION['role']==1) {
        

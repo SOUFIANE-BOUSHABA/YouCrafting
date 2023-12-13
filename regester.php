@@ -1,8 +1,10 @@
 <?php 
+include 'db.php';
 require_once 'user.php';
 if(isset($_POST["regester"])){
     extract($_POST);
-   $users= new user();
+    $db = new DB();
+   $users= new user($db->connect());
 
     $result=$users->Registre($firstname,$lastname,$username,$password,$email,$role_id);
     if($result) header('location:./login.php');

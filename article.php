@@ -11,9 +11,8 @@ class Articlee {
 
     private $db;
 
-    public function __construct() {
-        $this->db = new PDO("mysql:host=localhost;dbname=article", "root", "");
-       
+    public function __construct($db) {
+        $this->db = $db;
     }
 
     public function addArticle($article) {

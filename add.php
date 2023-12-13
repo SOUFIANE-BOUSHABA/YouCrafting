@@ -1,10 +1,12 @@
 <?php
+include 'db.php';
 include 'article.php';
 session_start();
-$articleManager = new Articlee();
+$db = new DB();
+$articleManager = new Articlee($db->connect());
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $article = new Articlee();
+    $article = new Articlee($db->connect());
     $article->titre = $_POST['titre'];
     $article->contenu = $_POST['contenu'];
     $article->user_id = $_SESSION['idUser'];

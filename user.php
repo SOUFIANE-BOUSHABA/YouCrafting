@@ -5,10 +5,10 @@ class user{
 
     private $db;
 
-    public function __construct() {
-        $this->db = new PDO("mysql:host=localhost;dbname=article", "root", "");
-       
+    public function __construct($db) {
+        $this->db = $db;
     }
+    
     public function Registre($firstname,$lastname,$username,$password,$email, $role_id){
         $query = "INSERT INTO utilisateur (`firstname`, `lastname`, `username`, `password`, `email`, `role_id`) VALUES (?, ?, ?, ?,?,?)";
         $stmt = $this->db->prepare($query);

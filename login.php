@@ -1,7 +1,9 @@
 <?php
 session_start();
+include 'db.php';
 require_once 'user.php';
-$users= new user();
+$db = new DB();
+$users= new user($db->connect());
 if(isset($_POST["login"])){
     extract($_POST);
     $result=$users->Login($username,$password);
