@@ -29,10 +29,10 @@ class Articlee {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateArticle($article) {
+    public function updateArticle($article_id,$nouveau_titre,$nouveau_contenu) {
         $query = "UPDATE Article SET titre = ?, contenu = ? WHERE id = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$article->titre, $article->contenu, $article->id]);
+        $stmt->execute([$nouveau_titre,$nouveau_contenu,$article_id]);
     }
 
     public function deleteArticle($articleId) {

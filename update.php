@@ -6,12 +6,9 @@ include 'art.php';
 $db = new DB();
 $articleManager = new Articlee($db->connect());
 
-$article = new Articlee($db->connect());
-$article->id = $_POST['article_id'];
-$article->titre = $_POST['nouveau_titre'];
-$article->contenu = $_POST['nouveau_contenu'];
+extract($_POST);
 
-$articleManager->updateArticle($article);
+$articleManager->updateArticle($article_id,$nouveau_titre,$nouveau_contenu);
 
 header("Location: index.php");
 ?>
